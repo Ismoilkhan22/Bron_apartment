@@ -70,8 +70,6 @@ class ProductLike(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-
 
 class Comfort(BaseModel):
     """
