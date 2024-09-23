@@ -59,7 +59,7 @@ class ProductImage(BaseModel):
     """
     product image model
     """
-    img = models.ImageField(upload_to='product/%Y/%m/%d/')
+    img = models.ImageField(upload_to='media/product/%Y/%m/%d/')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 
@@ -77,7 +77,7 @@ class Comfort(BaseModel):
     """
     product comfort model qulayliklar
     """
-    icon = models.ImageField(upload_to='products/icons/%Y/%m/%d/')
+    icon = models.ImageField(upload_to='media/products/icons/%Y/%m/%d/')
     title = models.CharField(max_length=256)
     slug = models.SlugField(max_length=256, unique=True)
 

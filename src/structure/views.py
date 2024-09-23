@@ -137,6 +137,7 @@ class ProductRuleDetailAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
     
     def delete(self, request,pk, *args, **kwargs):
+
         product_rule = self.get_object(pk)
         if not product_rule:
             return Response(
@@ -148,3 +149,56 @@ class ProductRuleDetailAPIView(APIView):
             {"res":"product_rule deleted"},
             status=status.HTTP_200_OK
         )
+    
+
+class ComfortListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        comforts = Comfort.objects.all()
+        serializer = ComfortSerializer(comforts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serializer = ComfortSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ComfortDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            comfort = Comfort.objects.get(id=pk)
+        except Comfort.DoesNotExist:
+            return None
+    
+    def get(self, request, pk, *args, **kwargs):
+        comfort = self.get_object(pk)
+        if not comfort:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = ComfortSerializer(comfort)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk, *args, **kwargs):
+        comfort_instance = self.get_object(pk)
+        if not comfort_instance:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = ComfortSerializer(isinstance=comfort_instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        comfort = self.get_object(pk)
+        if not comfort:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        comfort.delete()
+        return Response({"message": "Object with todo id was deleted"}, status=status.HTTP_200_OK)
+    
