@@ -16,4 +16,8 @@ urlpatterns = [
     path("comfort/", ComfortListAPIView.as_view()),
     path("comfort/<int:pk>/",ComfortDetailAPIView.as_view()),
 
+    # product image api view
+    path("product_image/", ProductImageListAPIView.as_view()),
+    path("product_image/<int:pk>/", ProductImageDetailAPIView.as_view())
+
 ]
