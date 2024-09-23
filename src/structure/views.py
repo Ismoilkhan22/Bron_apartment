@@ -66,8 +66,7 @@ class CategoryDetailView(APIView):
                 {"res": "Object with todo id does not exists"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        data = request.data
-        serializer = CategorySerializer(instance=category, data=data, partial=True)
+        serializer = CategorySerializer(instance=category, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -85,5 +84,67 @@ class CategoryDetailView(APIView):
         category_instance.delete()
         return Response(
             {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+class ProductRuleListAPIView(APIView):
+
+    def get(self, request):
+        product_rules = ProductRule.objects.all()
+        serializer = ProductRuleSerializer(product_rules, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self,request, *args, **kwargs):
+        # if request.user:
+            serializer = ProductRuleSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({'error': 'User must be authenticated'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class ProductRuleDetailAPIView(APIView):
+    
+    def get_object(self, pk):
+        try:
+            return ProductRule.objects.get(id=pk)
+        except ProductRule.DoesNotExist:
+            return None
+    
+    def get(self, request, pk, *args, **kwargs):
+        product_rule = self.get_object(pk)
+        if not product_rule:
+            return Response(
+                {"res": "Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = ProductRuleSerializer(product_rule)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self,request, pk, *args, **kwargs):
+
+        product_rule = self.get_object(pk)
+        if not product_rule:
+            return Response(
+                {"res": "Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer =  ProductRuleSerializer(instance=product_rule, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    
+    def delete(self, request,pk, *args, **kwargs):
+        product_rule = self.get_object(pk)
+        if not product_rule:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        product_rule.delete()
+        return Response(
+            {"res":"product_rule deleted"},
             status=status.HTTP_200_OK
         )
