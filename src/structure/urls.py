@@ -10,6 +10,10 @@ urlpatterns = [
 
     # product_rule api urls
     path("product_rule/", ProductRuleListAPIView.as_view()),
-    path("product_rule/<int:pk>/", ProductRuleDetailAPIView.as_view())
+    path("product_rule/<int:pk>/", ProductRuleDetailAPIView.as_view()),
+
+    # comfort api urls
+    path("comfort/", ComfortListAPIView.as_view()),
+    path("comfort/<int:pk>/",ComfortDetailAPIView.as_view()),
 
 ]
