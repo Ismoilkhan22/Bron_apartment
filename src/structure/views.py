@@ -168,7 +168,7 @@ class ComfortListAPIView(APIView):
 class ComfortDetailAPIView(APIView):
     def get_object(self, pk):
         try:
-            comfort = Comfort.objects.get(id=pk)
+            return Comfort.objects.get(id=pk)
         except Comfort.DoesNotExist:
             return None
     
@@ -218,7 +218,7 @@ class ProductImageListAPIView(APIView):
 class ProductImageDetailAPIView(APIView):
     def get_object(self, pk):
         try:
-            product_image = ProductImage.objects.get(id=pk)
+            return  ProductImage.objects.get(id=pk)
         except ProductImage.DoesNotExist:
             return None
 
@@ -269,7 +269,7 @@ class ProductListAPIView(APIView):
 class ProductDetailAPIView(APIView):
     def get_object(self, pk):
         try:
-            product = Product.objects.get(id=pk)
+            return Product.objects.get(id=pk)
         except Product.DoesNotExist:
             return None
     
@@ -302,3 +302,58 @@ class ProductDetailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
         product.delete()
         return Response({"message": "Product deleted"}, status=status.HTTP_200_OK)
+
+
+
+class RentListAPIView(APIView):
+    def get(self,request, *args, **kwargs):
+        rents = Rent.objects.all()
+        serializer = RentSerializer(serializer, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self,request, *args, **kwargs):
+        serializer = RentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RentDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            return Rent.objects.get(pk)
+        except Rent.DoesNotExist:
+            return None
+
+    def get(self, request, pk, *args, **kwargs):
+        rent = self.get_object(id=pk)
+        if not rent:
+            return Response(
+                {"result":" rent does not have "},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = RentSerializer(rent)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self,request,pk, *args, **kwargs):
+        rent = self.get_object(pk)
+        if not rent:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = RentSerializer(isinstance=rent, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        rent = self.get_object(pk)
+        if not rent:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        rent.delete()
+        return Response({"message": "Rent deleted"}, status=status.HTTP_200_OK)
+    
