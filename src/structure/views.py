@@ -251,3 +251,54 @@ class ProductImageDetailAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
         product_image.delete()
         return Response({"message":"Product image deleted"}, status=status.HTTP_200_OK)
+
+
+class ProductListAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProductDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            product = Product.objects.get(id=pk)
+        except Product.DoesNotExist:
+            return None
+    
+    def get(self,request, pk, *args , **kwargs ):
+        product = self.get_object(pk)
+        if not product:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request,pk, *args, **kwargs):
+        product = self.get_object(pk)
+        if not product:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(isinstance=product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        product = self.get_object(pk)
+        if not product:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        product.delete()
+        return Response({"message": "Product deleted"}, status=status.HTTP_200_OK)
