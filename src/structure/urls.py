@@ -22,6 +22,10 @@ urlpatterns = [
 
     # product api urls
     path("product/", ProductListAPIView.as_view()),
-    path("product/<int:pk>/",ProductDetailAPIView.as_view())
+    path("product/<int:pk>/",ProductDetailAPIView.as_view()),
+
+    # rent api urls
+    path("rent", RentListAPIView.as_view()),
+    path("rent/", RentDetailAPIView.as_view()),
 
 ]
