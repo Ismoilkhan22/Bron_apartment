@@ -18,6 +18,10 @@ urlpatterns = [
 
     # product image api view
     path("product_image/", ProductImageListAPIView.as_view()),
-    path("product_image/<int:pk>/", ProductImageDetailAPIView.as_view())
+    path("product_image/<int:pk>/", ProductImageDetailAPIView.as_view()),
+
+    # product api urls
+    path("product/", ProductListAPIView.as_view()),
+    path("product/<int:pk>/",ProductDetailAPIView.as_view())
 
 ]
