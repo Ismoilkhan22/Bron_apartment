@@ -308,7 +308,7 @@ class ProductDetailAPIView(APIView):
 class RentListAPIView(APIView):
     def get(self,request, *args, **kwargs):
         rents = Rent.objects.all()
-        serializer = RentSerializer(serializer, many=True)
+        serializer = RentSerializer(rents, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self,request, *args, **kwargs):
@@ -322,7 +322,7 @@ class RentListAPIView(APIView):
 class RentDetailAPIView(APIView):
     def get_object(self, pk):
         try:
-            return Rent.objects.get(pk)
+            return Rent.objects.get(id=pk)
         except Rent.DoesNotExist:
             return None
 
@@ -355,5 +355,58 @@ class RentDetailAPIView(APIView):
                 {"raise":"Object with todo id does not exists"},
                 status=status.HTTP_400_BAD_REQUEST)
         rent.delete()
+        return Response({"message": "Rent deleted"}, status=status.HTTP_200_OK)
+    
+
+class ProductLikeListAPIView(APIView):
+    def get(self,request, *args, **kwargs):
+        rents = ProductLike.objects.all()
+        serializer = ProductLikeSerializer(rents, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self,request, *args, **kwargs):
+        serializer = ProductLikeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProductLikeDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            return ProductLike.objects.get(id=pk)
+        except Rent.DoesNotExist:
+            return None
+
+    def get(self, request, pk, *args, **kwargs):
+        pr_like = self.get_object(id=pk)
+        if not pr_like:
+            return Response(
+                {"result":" rent does not have "},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = ProductLikeSerializer(pr_like)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self,request,pk, *args, **kwargs):
+        pr_like = self.get_object(pk)
+        if not pr_like:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductLikeSerializer(isinstance=pr_like, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        pr_like = self.get_object(pk)
+        if not pr_like:
+            return Response(
+                {"raise":"Object with todo id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST)
+        pr_like.delete()
         return Response({"message": "Rent deleted"}, status=status.HTTP_200_OK)
     
