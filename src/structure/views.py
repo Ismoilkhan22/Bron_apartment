@@ -380,7 +380,7 @@ class ProductLikeDetailAPIView(APIView):
             return None
 
     def get(self, request, pk, *args, **kwargs):
-        pr_like = self.get_object(id=pk)
+        pr_like = self.get_object(pk)
         if not pr_like:
             return Response(
                 {"result":" rent does not have "},

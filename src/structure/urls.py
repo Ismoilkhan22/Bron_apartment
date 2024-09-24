@@ -25,7 +25,7 @@ urlpatterns = [
     path("product/<int:pk>/",ProductDetailAPIView.as_view()),
 
     # product like api urls
-    path("prodict_like/", ProductLikeListAPIView.as_view()),
+    path("product_like/", ProductLikeListAPIView.as_view()),
     path("product_like/<int:pk>/",ProductLikeDetailAPIView.as_view()),
 
     # rent api urls
