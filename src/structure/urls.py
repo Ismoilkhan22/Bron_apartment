@@ -24,8 +24,12 @@ urlpatterns = [
     path("product/", ProductListAPIView.as_view()),
     path("product/<int:pk>/",ProductDetailAPIView.as_view()),
 
+    # product like api urls
+    path("product_like/", ProductLikeListAPIView.as_view()),
+    path("product_like/<int:pk>/",ProductLikeDetailAPIView.as_view()),
+
     # rent api urls
-    path("rent", RentListAPIView.as_view()),
-    path("rent/", RentDetailAPIView.as_view()),
+    path("rent/", RentListAPIView.as_view()),
+    path("rent/<int:pk>/", RentDetailAPIView.as_view()),
 
 ]
